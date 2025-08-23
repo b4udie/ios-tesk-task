@@ -19,6 +19,13 @@ enum ServicesAssembler {
         return { service }
     }()
     
+    // MARK: - NetworkReachability
+    
+    static let networkReachability: PerformOnce<NetworkReachability> = {
+        let service = NetworkReachabilityImpl()
+        return { service }
+    }()
+    
     // MARK: - NetworkLayer
 
     static func bitcoinRateNetworkService(_ plugins: NetworkPlugin...) -> BitcoinRateNetworkService {
@@ -32,10 +39,25 @@ enum ServicesAssembler {
     
     static let bitcoinRateService: PerformOnce<BitcoinRateService> = {
         let analyticsService = Self.analyticsService()
+        let networkReachability = Self.networkReachability()
+        let bitcoinRateStore = Self.bitcoinRateStore()
         let bitcoinRateAnalyticsPlugin = BitcoinRateAnalyticsPlugin(analyticsService: analyticsService)
         let bitcoinNetworkService = Self.bitcoinRateNetworkService(bitcoinRateAnalyticsPlugin)
-        let service = BitcoinRateServiceImpl(analyticsService: analyticsService, networkService: bitcoinNetworkService)
+        let service = BitcoinRateServiceImpl(
+            analyticsService: analyticsService, 
+            networkService: bitcoinNetworkService,
+            networkReachability: networkReachability,
+            bitcoinRateStore: bitcoinRateStore
+        )
         return { service }
+    }()
+    
+    // MARK: - BitcoinRateStore
+    
+    static let bitcoinRateStore: PerformOnce<BitcoinRateStore> = {
+        let coreDataStack = Self.coreDataStack()
+        let store = BitcoinRateStoreImpl(database: coreDataStack)
+        return { store }
     }()
     
     // MARK: - TransactionService

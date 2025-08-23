@@ -37,9 +37,7 @@ final class MainViewModel: ObservableObject {
          bitcoinRateService: BitcoinRateService = ServicesAssembler.bitcoinRateService()) {
         self.transactionService = transactionService
         self.bitcoinRateService = bitcoinRateService
-        
         setupBindings()
-        bitcoinRateService.startFetching()
     }
     
     // MARK: - Public Methods
