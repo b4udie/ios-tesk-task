@@ -7,16 +7,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "E6FC7AD8-2E0F-43A9-9178-02BBC2D050BE"
+            uuid = "65198A8A-CBBC-49F6-B681-4506C7BC1536"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "TransactionsTestTask/Services/BitcoinRate/BitcoinRateService.swift"
+            filePath = "TransactionsTestTaskTests/TransactionServiceTests.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
-            landmarkName = "setupNetworkMonitoring()"
+            startingLineNumber = "345"
+            endingLineNumber = "345"
+            landmarkName = "fetchTransactions(limit:offset:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "234CB361-B613-4CBA-A889-47441C80C347"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "TransactionsTestTaskTests/TransactionServiceTests.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "355"
+            endingLineNumber = "355"
+            landmarkName = "fetchTotalCount()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

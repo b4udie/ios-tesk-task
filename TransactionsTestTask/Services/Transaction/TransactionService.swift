@@ -26,7 +26,7 @@ final class TransactionServiceImpl: TransactionService {
     private let store: TransactionStore
     private let analyticsService: AnalyticsService
     
-    private let pageSize = 10
+    private let pageSize = 20
     private var currentPage = 0
     private var allTransactions: [Transaction] = []
     private var isLoading = false
