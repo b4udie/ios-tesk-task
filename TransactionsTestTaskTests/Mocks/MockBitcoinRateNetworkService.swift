@@ -10,11 +10,11 @@ import Combine
 @testable import TransactionsTestTask
 
 final class MockBitcoinRateNetworkService: BitcoinRateNetworkService {
-    var mockResponse: BitcoinRateResponse?
+    var mockResponse: BitcoinRateDTO?
     var mockError: NetworkError?
     var fetchBitcoinRateCallCount = 0
     
-    func fetchBitcoinRate() -> AnyPublisher<TransactionsTestTask.BitcoinRateResponse, TransactionsTestTask.NetworkError> {
+    func fetchBitcoinRate() -> AnyPublisher<TransactionsTestTask.BitcoinRateDTO, TransactionsTestTask.NetworkError> {
         fetchBitcoinRateCallCount += 1
         
         if let error = mockError {

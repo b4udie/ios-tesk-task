@@ -16,15 +16,6 @@ protocol BitcoinRateService: AnyObject {
     var ratePublisher: AnyPublisher<Double, Never> { get }
 }
 
-struct BitcoinRateResponse: Codable {
-    let USD: CurrencyRate
-    
-    struct CurrencyRate: Codable {
-        let last: Double
-        let symbol: String
-    }
-}
-
 final class BitcoinRateServiceImpl: BitcoinRateService {
     private let rateSubject = CurrentValueSubject<Double, Never>(0.0)
     private var timer: Timer?
@@ -98,11 +89,11 @@ final class BitcoinRateServiceImpl: BitcoinRateService {
                 },
                 receiveValue: { [weak self] response in
                     guard let self else { return }
-                    let rate = response.USD.last
-                    self.rateSubject.send(rate)
+                    let bitcoinRateBO = BitcoinRateBO(from: response)
+                    self.rateSubject.send(bitcoinRateBO.rate)
                     
                     Task {
-                        try await self.bitcoinRateStore.saveRate(rate)
+                        try await self.bitcoinRateStore.saveRate(bitcoinRateBO.rate)
                     }
                 }
             )

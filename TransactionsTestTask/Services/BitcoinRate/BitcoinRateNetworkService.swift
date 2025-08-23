@@ -9,7 +9,7 @@ import Combine
 
 /// High-level network service that uses NetworkClient
 protocol BitcoinRateNetworkService {
-    func fetchBitcoinRate() -> AnyPublisher<BitcoinRateResponse, NetworkError>
+    func fetchBitcoinRate() -> AnyPublisher<BitcoinRateDTO, NetworkError>
 }
 
 /// Default implementation of NetworkService
@@ -20,7 +20,7 @@ final class BitcoinRateNetworkServiceImpl: BitcoinRateNetworkService {
         self.networkClient = networkClient
     }
     
-    func fetchBitcoinRate() -> AnyPublisher<BitcoinRateResponse, NetworkError> {
+    func fetchBitcoinRate() -> AnyPublisher<BitcoinRateDTO, NetworkError> {
         networkClient.request(BitcoinAPI.ticker)
     }
 }

@@ -9,28 +9,35 @@ import UIKit
 import Combine
 
 final class MainViewController: UIViewController {
+    // MARK: - Constants
+    
+    private enum Constants {
+        static let balanceTitle: String = "💰 Bitcoin Balance"
+        static let defaultBalanceTitle: String = "0.0 BTC"
+        static let defaultBitcoinRateTitle: String = "BTC: $0.00"
+        static let addIncomeTitle: String = "💎 + Add Income"
+        static let addTransactionTitle: String = "📝 Add Transaction"
+    }
+    
+    // MARK: - Private Properties
+
     private let viewModel: MainViewModel
-    private var cancellables = Set<AnyCancellable>()
-    
-    // MARK: - UI Components
-    
+
     private let scrollView = UIScrollView()
     private let contentView = UIView()
-    
     private let headerView = UIView()
     private let balanceLabel = UILabel()
     private let addIncomeButton = UIButton()
     private let bitcoinRateLabel = UILabel()
-    
     private let addTransactionButton = UIButton()
     private let transactionsTableView = UITableView()
-    
-    private let refreshControl = UIRefreshControl()
-    
     private let backgroundGradient = CAGradientLayer()
     private let headerGradient = CAGradientLayer()
     private let addButtonGradient = CAGradientLayer()
-    
+    private var cancellables = Set<AnyCancellable>()
+
+    // MARK: - Lifecycle
+
     init(viewModel: MainViewModel) {
         self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
@@ -59,6 +66,8 @@ final class MainViewController: UIViewController {
         CATransaction.commit()
     }
 }
+
+// MARK: - Private Methods
 
 private extension MainViewController {
     func setupUI() {
@@ -120,18 +129,18 @@ private extension MainViewController {
         balanceStackView.alignment = .center
         
         let balanceTitleLabel = UILabel()
-        balanceTitleLabel.text = "💰 Bitcoin Balance"
+        balanceTitleLabel.text = Constants.balanceTitle
         balanceTitleLabel.textColor = .textColorWhiteAlpha90
         balanceTitleLabel.font = .systemFont(ofSize: 18, weight: .medium)
         
         balanceLabel.textColor = .textColorWhite
         balanceLabel.font = .systemFont(ofSize: 36, weight: .bold)
-        balanceLabel.text = "0.0 BTC"
+        balanceLabel.text = Constants.defaultBalanceTitle
         balanceLabel.shadowColor = .shadowColor
         balanceLabel.shadowOffset = CGSize(width: 0, height: 2)
         
         var config = UIButton.Configuration.filled()
-        config.title = "💎 + Add Income"
+        config.title = Constants.addIncomeTitle
         config.baseBackgroundColor = .glassWhiteAlpha20
         config.baseForegroundColor = .textColorWhite
         config.cornerStyle = .medium
@@ -175,7 +184,7 @@ private extension MainViewController {
         bitcoinRateLabel.textColor = .textColorWhite
         bitcoinRateLabel.font = .systemFont(ofSize: 14, weight: .semibold)
         bitcoinRateLabel.textAlignment = .center
-        bitcoinRateLabel.text = "BTC: $0.00"
+        bitcoinRateLabel.text = Constants.defaultBitcoinRateTitle
         
         rateContainer.addSubview(bitcoinRateLabel)
         bitcoinRateLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -208,7 +217,7 @@ private extension MainViewController {
         contentView.addSubview(addTransactionButton)
         addTransactionButton.translatesAutoresizingMaskIntoConstraints = false
         
-        addTransactionButton.setTitle("📝 Add Transaction", for: .normal)
+        addTransactionButton.setTitle(Constants.addTransactionTitle, for: .normal)
         addButtonGradient.applyButtonBackgroundGradient()
         addButtonGradient.masksToBounds = true
         addTransactionButton.layer.insertSublayer(addButtonGradient, at: 0)
@@ -232,8 +241,8 @@ private extension MainViewController {
         
         transactionsTableView.delegate = self
         transactionsTableView.dataSource = self
-        transactionsTableView.register(TransactionCell.self, forCellReuseIdentifier: "TransactionCell")
-        transactionsTableView.register(TransactionHeaderView.self, forHeaderFooterViewReuseIdentifier: "TransactionHeaderView")
+        transactionsTableView.register(TransactionCell.self)
+        transactionsTableView.register(TransactionHeaderView.self)
         transactionsTableView.separatorStyle = .none
         transactionsTableView.backgroundColor = .clear
         transactionsTableView.showsVerticalScrollIndicator = false
@@ -271,6 +280,8 @@ private extension MainViewController {
     }
 }
 
+// MARK: - Actions
+
 private extension MainViewController {
     @objc func addTransactionTapped() {
         viewModel.addTransactionTapped()
@@ -280,6 +291,8 @@ private extension MainViewController {
         viewModel.addIncomeTapped()
     }
 }
+
+// MARK: - UITableViewDataSource & UITableViewDelegate
 
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -291,16 +304,16 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "TransactionCell", for: indexPath) as! TransactionCell
-        let transaction = viewModel.transactionGroups[indexPath.section].transactions[indexPath.row]
-        cell.configure(with: transaction)
+        let cell: TransactionCell = tableView.dequeueReusableCell(for: indexPath)
+        let transactionViewModel = viewModel.transactionGroups[indexPath.section].transactions[indexPath.row]
+        cell.configure(with: transactionViewModel)
         return cell
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: "TransactionHeaderView") as! TransactionHeaderView
-        let date = viewModel.transactionGroups[section].date
-        headerView.configure(with: date)
+        let headerView: TransactionHeaderView = tableView.dequeueReusableHeaderFooter()
+        let dateString = viewModel.transactionGroups[section].date
+        headerView.configure(with: dateString)
         return headerView
     }
     
@@ -314,7 +327,7 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == viewModel.transactionGroups[indexPath.section].transactions.count - 1 {
-            viewModel.loadMoreTransactions()
+                viewModel.loadMoreTransactions()
         }
     }
 }

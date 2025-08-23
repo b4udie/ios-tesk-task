@@ -22,10 +22,8 @@ final class BitcoinRateAnalyticsPlugin: NetworkPlugin {
         case .success(let data):
             // Try to decode and track the Bitcoin rate
             do {
-                let response = try JSONDecoder().decode(BitcoinRateResponse.self, from: data)
-                let rate = response.USD.last
-                
-                let bitcoinEvent = BitcoinRateEvent(rate: rate)
+                let response = try JSONDecoder().decode(BitcoinRateDTO.self, from: data)
+                let bitcoinEvent = BitcoinRateEvent(rate: response.usd.last)
                 analyticsService.trackEvent(bitcoinEvent)
             } catch {
                 let errorEvent = ErrorEvent(error: error, context: "bitcoin_rate_decoding")

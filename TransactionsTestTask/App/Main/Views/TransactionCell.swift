@@ -36,28 +36,12 @@ final class TransactionCell: UITableViewCell {
     
     // MARK: - Public Methods
     
-    func configure(with transaction: Transaction) {
-        switch transaction.type {
-        case .income:
-            categoryIconLabel.text = "💰"
-            categoryLabel.text = "Income"
-        case .expense(let transactionCategory):
-            categoryIconLabel.text = transactionCategory.icon
-            categoryLabel.text = transactionCategory.displayName
-        }
-        
-        let formatter = DateFormatter()
-        formatter.timeStyle = .short
-        timeLabel.text = formatter.string(from: transaction.date)
-        
-        switch transaction.type {
-        case .income:
-            amountLabel.text = String(format: "+%.4f BTC", transaction.amount)
-            amountLabel.textColor = .successGreen
-        case .expense:
-            amountLabel.text = String(format: "-%.4f BTC", transaction.amount)
-            amountLabel.textColor = .errorRed
-        }
+    func configure(with viewModel: TransactionViewModel) {
+        categoryIconLabel.text = viewModel.categoryIcon
+        categoryLabel.text = viewModel.categoryName
+        timeLabel.text = viewModel.formattedTime
+        amountLabel.text = viewModel.formattedAmount
+        amountLabel.textColor = viewModel.amountColor
     }
 }
 
@@ -77,18 +61,11 @@ private extension TransactionCell {
     func setupContainerView() {
         contentView.addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        
-//        let gradientLayer = CAGradientLayer()
-//        gradientLayer.applyCardBackgroundGradient()
-//        containerView.layer.insertSublayer(gradientLayer, at: 0)
         containerView.layer.cornerRadius = DesignSystem.CornerRadius.medium
         containerView.layer.borderWidth = DesignSystem.BorderWidth.thin
         containerView.layer.borderColor = DesignSystem.Colors.glassWhiteAlpha10.cgColor
         containerView.layer.applyCardShadow()
         containerView.backgroundColor = DesignSystem.Colors.glassWhiteAlpha05
-//        DispatchQueue.main.async {
-//            gradientLayer.frame = self.containerView.bounds
-//        }
     }
     
     func setupCategoryIcon() {

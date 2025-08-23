@@ -28,8 +28,8 @@ final class CategoryCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
     
-        containerView.backgroundColor = UIColor.white.withAlphaComponent(0.15)
-        containerView.layer.borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
+        containerView.backgroundColor = DesignSystem.Colors.glassWhiteAlpha15
+        containerView.layer.borderColor = DesignSystem.Colors.glassWhiteAlpha20.cgColor
         titleLabel.textColor = .white
     }
     
@@ -38,15 +38,14 @@ final class CategoryCell: UICollectionViewCell {
     func configure(with category: TransactionCategory, isSelected: Bool) {
         iconLabel.text = category.icon
         titleLabel.text = category.displayName
-        
+        titleLabel.textColor = .white
+
         if isSelected {
-            containerView.backgroundColor = UIColor(red: 0.2, green: 0.8, blue: 0.4, alpha: 0.9)
-            containerView.layer.borderColor = UIColor(red: 0.2, green: 0.8, blue: 0.4, alpha: 1.0).cgColor
-            titleLabel.textColor = .white
+            containerView.backgroundColor = DesignSystem.Colors.secondaryGreen90
+            containerView.layer.borderColor = DesignSystem.Colors.secondaryGreen.cgColor
         } else {
-            containerView.backgroundColor = UIColor.white.withAlphaComponent(0.15)
-            containerView.layer.borderColor = UIColor.white.withAlphaComponent(0.2).cgColor
-            titleLabel.textColor = .white
+            containerView.backgroundColor = DesignSystem.Colors.glassWhiteAlpha15
+            containerView.layer.borderColor = DesignSystem.Colors.glassWhiteAlpha20.cgColor
         }
     }
 }
@@ -59,15 +58,10 @@ private extension CategoryCell {
         
         contentView.addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        containerView.layer.cornerRadius = 16
-        containerView.layer.borderWidth = 2
+        containerView.layer.cornerRadius = DesignSystem.CornerRadius.medium
+        containerView.layer.borderWidth = DesignSystem.BorderWidth.medium
         containerView.layer.borderColor = UIColor.clear.cgColor
-        
-        // Add subtle shadow
-        containerView.layer.shadowColor = UIColor.black.cgColor
-        containerView.layer.shadowOffset = CGSize(width: 0, height: 4)
-        containerView.layer.shadowRadius = 8
-        containerView.layer.shadowOpacity = 0.15
+        containerView.layer.applyCardShadow()
         
         containerView.addSubview(iconLabel)
         containerView.addSubview(titleLabel)

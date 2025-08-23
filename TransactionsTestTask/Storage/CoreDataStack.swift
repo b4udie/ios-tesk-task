@@ -20,11 +20,8 @@ final class CoreDataStack {
         return ctx
     }
 
-    init(inMemory: Bool = false) {
+    init() {
         container = NSPersistentContainer(name: "TransactionsTestTask")
-        if inMemory {
-            container.persistentStoreDescriptions.first?.url = URL(fileURLWithPath: "/dev/null")
-        }
         if let d = container.persistentStoreDescriptions.first {
             d.setOption(true as NSNumber, forKey: NSMigratePersistentStoresAutomaticallyOption)
             d.setOption(true as NSNumber, forKey: NSInferMappingModelAutomaticallyOption)

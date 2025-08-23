@@ -25,21 +25,8 @@ final class TransactionHeaderView: UITableViewHeaderFooterView {
     
     // MARK: - Public Methods
     
-    func configure(with date: Date) {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        
-        let today = Date()
-        let calendar = Calendar.current
-        
-        if calendar.isDate(date, inSameDayAs: today) {
-            dateLabel.text = "Today"
-        } else if calendar.isDate(date, inSameDayAs: calendar.date(byAdding: .day, value: -1, to: today) ?? today) {
-            dateLabel.text = "Yesterday"
-        } else {
-            dateLabel.text = formatter.string(from: date)
-        }
+    func configure(with dateString: String) {
+        dateLabel.text = dateString
     }
 }
 
