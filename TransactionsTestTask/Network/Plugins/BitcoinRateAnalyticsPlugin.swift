@@ -25,34 +25,16 @@ final class BitcoinRateAnalyticsPlugin: NetworkPlugin {
                 let response = try JSONDecoder().decode(BitcoinRateResponse.self, from: data)
                 let rate = response.USD.last
                 
-                analyticsService.trackEvent(
-                    name: "bitcoin_rate_update",
-                    parameters: [
-                        "rate": String(format: "%.2f", rate),
-                        "currency": "USD",
-                        "source": "network_layer"
-                    ]
-                )
+                let bitcoinEvent = BitcoinRateEvent(rate: rate)
+                analyticsService.trackEvent(bitcoinEvent)
             } catch {
-                // If decoding fails, still track the event but without rate data
-                analyticsService.trackEvent(
-                    name: "bitcoin_rate_update_failed",
-                    parameters: [
-                        "error": "decoding_error",
-                        "source": "network_layer"
-                    ]
-                )
+                let errorEvent = ErrorEvent(error: error, context: "bitcoin_rate_decoding")
+                analyticsService.trackEvent(errorEvent)
             }
             
         case .failure(let error):
-            analyticsService.trackEvent(
-                name: "bitcoin_rate_update_failed",
-                parameters: [
-                    "error": error.localizedDescription,
-                    "error_type": String(describing: type(of: error)),
-                    "source": "network_layer"
-                ]
-            )
+            let errorEvent = ErrorEvent(error: error, context: "bitcoin_rate_network")
+            analyticsService.trackEvent(errorEvent)
         }
     }
 }

@@ -24,14 +24,16 @@ final class TransactionServiceImpl: TransactionService {
 
     private var cancellables = Set<AnyCancellable>()
     private let store: TransactionStore
+    private let analyticsService: AnalyticsService
     
     private let pageSize = 10
     private var currentPage = 0
     private var allTransactions: [Transaction] = []
     private var isLoading = false
 
-    init(transactionStore: TransactionStore) {
+    init(transactionStore: TransactionStore, analyticsService: AnalyticsService) {
         self.store = transactionStore
+        self.analyticsService = analyticsService
         loadInitialTransactions()
         loadCurrentBalance()
     }
@@ -50,9 +52,21 @@ final class TransactionServiceImpl: TransactionService {
 
     func addTransaction(_ transaction: Transaction) {
         Task {
-            try await store.insert(transaction)
-            await updateBalanceAfterTransaction(transaction)
-            await reloadTransactionsForCurrentPage()
+            do {
+                try await store.insert(transaction)
+                await updateBalanceAfterTransaction(transaction)
+                await reloadTransactionsForCurrentPage()
+                
+                let transactionEvent = TransactionEvent(
+                    type: transaction.type.isIncome ? "income" : "expense",
+                    amount: transaction.amount,
+                    category: transaction.type.category?.rawValue
+                )
+                analyticsService.trackEvent(transactionEvent)
+            } catch {
+                let errorEvent = ErrorEvent(error: error, context: "add_transaction")
+                analyticsService.trackEvent(errorEvent)
+            }
         }
     }
 
@@ -79,7 +93,8 @@ final class TransactionServiceImpl: TransactionService {
                 await MainActor.run {
                     self.isLoading = false
                 }
-                print("Error loading next page: \(error)")
+                let errorEvent = ErrorEvent(error: error, context: "load_next_page")
+                analyticsService.trackEvent(errorEvent)
             }
         }
     }
@@ -91,7 +106,8 @@ final class TransactionServiceImpl: TransactionService {
             currentPage = 1
             updateTransactionGroups()
         } catch {
-            print("Error loading initial transactions: \(error)")
+            let errorEvent = ErrorEvent(error: error, context: "load_initial_transactions")
+            analyticsService.trackEvent(errorEvent)
         }
     }
     
@@ -100,7 +116,8 @@ final class TransactionServiceImpl: TransactionService {
             let currentBalance = try store.getCurrentBalance()
             balanceSubject.send(currentBalance)
         } catch {
-            print("Error loading current balance: \(error)")
+            let errorEvent = ErrorEvent(error: error, context: "load_current_balance")
+            analyticsService.trackEvent(errorEvent)
         }
     }
     
@@ -122,7 +139,8 @@ final class TransactionServiceImpl: TransactionService {
                 self.balanceSubject.send(newBalance)
             }
         } catch {
-            print("Error updating balance after transaction: \(error)")
+            let errorEvent = ErrorEvent(error: error, context: "update_balance_after_transaction")
+            analyticsService.trackEvent(errorEvent)
         }
     }
     
