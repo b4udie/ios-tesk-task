@@ -24,6 +24,8 @@
 		CB5EA8A22E5A14110089791D /* TransactionEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EA8A12E5A14110089791D /* TransactionEvent.swift */; };
 		CB5EA8A42E5A142C0089791D /* NetworkEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EA8A32E5A142C0089791D /* NetworkEvent.swift */; };
 		CB5EA8A62E5A144A0089791D /* AppLifecycleEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EA8A52E5A144A0089791D /* AppLifecycleEvent.swift */; };
+		CB5EA8A92E5A1F0A0089791D /* NetworkReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EA8A72E5A1F0A0089791D /* NetworkReachability.swift */; };
+		CB5EA8AB2E5A1F170089791D /* BitcoinRateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EA8AA2E5A1F170089791D /* BitcoinRateStore.swift */; };
 		CB8ABA052E58A96E003AE4B9 /* BaseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8ABA042E58A96E003AE4B9 /* BaseCoordinator.swift */; };
 		CB8ABA082E58A9AB003AE4B9 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8ABA072E58A9AB003AE4B9 /* MainCoordinator.swift */; };
 		CB8ABA0A2E58AABE003AE4B9 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8ABA092E58AABE003AE4B9 /* MainViewModel.swift */; };
@@ -95,6 +97,8 @@
 		CB5EA8A12E5A14110089791D /* TransactionEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionEvent.swift; sourceTree = "<group>"; };
 		CB5EA8A32E5A142C0089791D /* NetworkEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkEvent.swift; sourceTree = "<group>"; };
 		CB5EA8A52E5A144A0089791D /* AppLifecycleEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLifecycleEvent.swift; sourceTree = "<group>"; };
+		CB5EA8A72E5A1F0A0089791D /* NetworkReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkReachability.swift; sourceTree = "<group>"; };
+		CB5EA8AA2E5A1F170089791D /* BitcoinRateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinRateStore.swift; sourceTree = "<group>"; };
 		CB8ABA042E58A96E003AE4B9 /* BaseCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCoordinator.swift; sourceTree = "<group>"; };
 		CB8ABA072E58A9AB003AE4B9 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		CB8ABA092E58AABE003AE4B9 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
@@ -169,6 +173,7 @@
 				0D15405F2D22EF3400D6D63F /* AnalyticsService */,
 				CB8ABA462E58B6C2003AE4B9 /* BitcoinRate */,
 				0DF1D1412D22DCC3001626E7 /* Helpers */,
+				CB5EA8A82E5A1F0A0089791D /* NetworkReachability */,
 				CB8ABA472E58B7C0003AE4B9 /* Transaction */,
 			);
 			path = Services;
@@ -234,6 +239,14 @@
 				0D1540602D22EF5D00D6D63F /* AnalyticsEvent.swift */,
 			);
 			path = Events;
+			sourceTree = "<group>";
+		};
+		CB5EA8A82E5A1F0A0089791D /* NetworkReachability */ = {
+			isa = PBXGroup;
+			children = (
+				CB5EA8A72E5A1F0A0089791D /* NetworkReachability.swift */,
+			);
+			path = NetworkReachability;
 			sourceTree = "<group>";
 		};
 		CB8AB9FE2E58A841003AE4B9 /* Resources */ = {
@@ -341,6 +354,7 @@
 		CB8ABA462E58B6C2003AE4B9 /* BitcoinRate */ = {
 			isa = PBXGroup;
 			children = (
+				CB5EA8AA2E5A1F170089791D /* BitcoinRateStore.swift */,
 				CB8ABA282E58ACE2003AE4B9 /* BitcoinAPI.swift */,
 				0DF1D1442D22DCFF001626E7 /* BitcoinRateService.swift */,
 				CB8ABA302E58ACE2003AE4B9 /* BitcoinRateNetworkService.swift */,
@@ -537,9 +551,11 @@
 				CB8ABA3D2E58ACE2003AE4B9 /* NetworkPlugin.swift in Sources */,
 				CB8ABA3E2E58ACE2003AE4B9 /* NetworkClient.swift in Sources */,
 				CB8ABA3F2E58ACE2003AE4B9 /* BitcoinRateNetworkService.swift in Sources */,
+				CB5EA8A92E5A1F0A0089791D /* NetworkReachability.swift in Sources */,
 				CB8ABA402E58ACE2003AE4B9 /* BitcoinRateAnalyticsPlugin.swift in Sources */,
 				CB8ABA532E58BDA3003AE4B9 /* DesignSystem.swift in Sources */,
 				CB8ABA0F2E58AB18003AE4B9 /* TransactionCell.swift in Sources */,
+				CB5EA8AB2E5A1F170089791D /* BitcoinRateStore.swift in Sources */,
 				CB5EA8A62E5A144A0089791D /* AppLifecycleEvent.swift in Sources */,
 				CB8ABA1B2E58ABE8003AE4B9 /* CategoryCell.swift in Sources */,
 				0D1540612D22EF5D00D6D63F /* AnalyticsEvent.swift in Sources */,
@@ -738,6 +754,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CBYC55P8DS;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TransactionsTestTask/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -768,6 +785,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = CBYC55P8DS;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TransactionsTestTask/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
