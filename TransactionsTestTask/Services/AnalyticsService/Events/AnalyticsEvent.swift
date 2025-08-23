@@ -6,8 +6,7 @@
 
 import Foundation
 
-struct AnalyticsEvent {
-    
+struct AnalyticsEvent: AnalyticsEventProtocol {
     let name: String
     let parameters: [String: String]
     let date: Date

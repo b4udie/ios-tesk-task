@@ -42,8 +42,9 @@ enum ServicesAssembler {
     
     static let transactionService: PerformOnce<TransactionService> = {
         let coreDataStack = Self.coreDataStack()
+        let analyticsService = Self.analyticsService()
         let transactionStore = TransactionStoreImpl(database: coreDataStack)
-        let service = TransactionServiceImpl(transactionStore: transactionStore)
+        let service = TransactionServiceImpl(transactionStore: transactionStore, analyticsService: analyticsService)
         return { service }
     }()
     

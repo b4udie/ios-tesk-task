@@ -8,4 +8,22 @@
 enum TransactionType {
     case income
     case expense(TransactionCategory)
+    
+    var isIncome: Bool {
+        switch self {
+        case .income:
+            true
+        case .expense:
+            false
+        }
+    }
+    
+    var category: TransactionCategory? {
+        switch self {
+        case .expense(let category):
+            category
+        case .income:
+            nil
+        }
+    }
 }
