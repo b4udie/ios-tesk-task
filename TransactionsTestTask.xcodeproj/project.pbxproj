@@ -45,6 +45,9 @@
 		CB8ABA4E2E58B7FE003AE4B9 /* Transaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8ABA4D2E58B7FE003AE4B9 /* Transaction.swift */; };
 		CB8ABA502E58B80B003AE4B9 /* TransactionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8ABA4F2E58B80B003AE4B9 /* TransactionGroup.swift */; };
 		CB8ABA532E58BDA3003AE4B9 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8ABA512E58BDA3003AE4B9 /* DesignSystem.swift */; };
+		CB8ABA562E59BCC5003AE4B9 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8ABA552E59BCC5003AE4B9 /* CoreDataStack.swift */; };
+		CB8ABA5A2E59BDA2003AE4B9 /* TransactionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8ABA592E59BDA2003AE4B9 /* TransactionStore.swift */; };
+		CB8ABA5E2E59C94B003AE4B9 /* CDTransaction+Domain.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8ABA5D2E59C94B003AE4B9 /* CDTransaction+Domain.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -107,6 +110,9 @@
 		CB8ABA4D2E58B7FE003AE4B9 /* Transaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transaction.swift; sourceTree = "<group>"; };
 		CB8ABA4F2E58B80B003AE4B9 /* TransactionGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionGroup.swift; sourceTree = "<group>"; };
 		CB8ABA512E58BDA3003AE4B9 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
+		CB8ABA552E59BCC5003AE4B9 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
+		CB8ABA592E59BDA2003AE4B9 /* TransactionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionStore.swift; sourceTree = "<group>"; };
+		CB8ABA5D2E59C94B003AE4B9 /* CDTransaction+Domain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CDTransaction+Domain.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +194,7 @@
 				CB8ABA022E58A95B003AE4B9 /* App */,
 				CB8ABA522E58BDA3003AE4B9 /* DesignSystem */,
 				0DF1D13E2D22DC2D001626E7 /* Services */,
+				CB8ABA572E59BCCB003AE4B9 /* Storage */,
 				CB8ABA1D2E58AC00003AE4B9 /* Models */,
 				CB8ABA422E58B5EA003AE4B9 /* Network */,
 				CB8AB9FE2E58A841003AE4B9 /* Resources */,
@@ -318,6 +325,7 @@
 		CB8ABA472E58B7C0003AE4B9 /* Transaction */ = {
 			isa = PBXGroup;
 			children = (
+				CB8ABA592E59BDA2003AE4B9 /* TransactionStore.swift */,
 				CB8ABA222E58AC87003AE4B9 /* TransactionService.swift */,
 			);
 			path = Transaction;
@@ -326,10 +334,10 @@
 		CB8ABA482E58B7DF003AE4B9 /* Transactions */ = {
 			isa = PBXGroup;
 			children = (
+				CB8ABA492E58B7E9003AE4B9 /* TransactionCategory.swift */,
 				CB8ABA4F2E58B80B003AE4B9 /* TransactionGroup.swift */,
 				CB8ABA4D2E58B7FE003AE4B9 /* Transaction.swift */,
 				CB8ABA4B2E58B7F6003AE4B9 /* TransactionType.swift */,
-				CB8ABA492E58B7E9003AE4B9 /* TransactionCategory.swift */,
 			);
 			path = Transactions;
 			sourceTree = "<group>";
@@ -340,6 +348,23 @@
 				CB8ABA512E58BDA3003AE4B9 /* DesignSystem.swift */,
 			);
 			path = DesignSystem;
+			sourceTree = "<group>";
+		};
+		CB8ABA572E59BCCB003AE4B9 /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				CB8ABA5C2E59C93A003AE4B9 /* Domain */,
+				CB8ABA552E59BCC5003AE4B9 /* CoreDataStack.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		CB8ABA5C2E59C93A003AE4B9 /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				CB8ABA5D2E59C94B003AE4B9 /* CDTransaction+Domain.swift */,
+			);
+			path = Domain;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -475,6 +500,7 @@
 				CB8ABA342E58ACE2003AE4B9 /* LoggingPlugin.swift in Sources */,
 				CB8ABA362E58ACE2003AE4B9 /* NetworkRequest.swift in Sources */,
 				CB8ABA372E58ACE2003AE4B9 /* HTTPMethod.swift in Sources */,
+				CB8ABA562E59BCC5003AE4B9 /* CoreDataStack.swift in Sources */,
 				CB8ABA382E58ACE2003AE4B9 /* BitcoinAPI.swift in Sources */,
 				CB8ABA3B2E58ACE2003AE4B9 /* URLSessionNetworkClient.swift in Sources */,
 				CB8ABA3C2E58ACE2003AE4B9 /* NetworkError.swift in Sources */,
@@ -500,7 +526,9 @@
 				CB8ABA212E58AC2C003AE4B9 /* AppCoordinator.swift in Sources */,
 				CB8ABA4A2E58B7E9003AE4B9 /* TransactionCategory.swift in Sources */,
 				CB8ABA052E58A96E003AE4B9 /* BaseCoordinator.swift in Sources */,
+				CB8ABA5E2E59C94B003AE4B9 /* CDTransaction+Domain.swift in Sources */,
 				1CA3B6562D22B0F500176711 /* AppDelegate.swift in Sources */,
+				CB8ABA5A2E59BDA2003AE4B9 /* TransactionStore.swift in Sources */,
 				CB8ABA182E58ABD7003AE4B9 /* AddTransactionViewModel.swift in Sources */,
 				1CA3B6582D22B0F500176711 /* SceneDelegate.swift in Sources */,
 				1CA3B6602D22B0F500176711 /* TransactionsTestTask.xcdatamodeld in Sources */,

@@ -12,6 +12,8 @@ final class MainViewController: UIViewController {
     private let viewModel: MainViewModel
     private var cancellables = Set<AnyCancellable>()
     
+    // MARK: - UI Components
+    
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
@@ -156,7 +158,8 @@ private extension MainViewController {
         balanceStackView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            balanceStackView.centerXAnchor.constraint(equalTo: headerView.centerXAnchor),
+            balanceStackView.leadingAnchor.constraint(equalTo: headerView.leadingAnchor),
+            balanceStackView.trailingAnchor.constraint(equalTo: headerView.trailingAnchor),
             balanceStackView.centerYAnchor.constraint(equalTo: headerView.centerYAnchor, constant: DesignSystem.Spacing.large),
             addIncomeButton.heightAnchor.constraint(equalToConstant: 40)
         ])
@@ -235,9 +238,6 @@ private extension MainViewController {
         transactionsTableView.backgroundColor = .clear
         transactionsTableView.showsVerticalScrollIndicator = false
         
-        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
-        transactionsTableView.refreshControl = refreshControl
-        
         NSLayoutConstraint.activate([
             transactionsTableView.topAnchor.constraint(equalTo: addTransactionButton.bottomAnchor, constant: DesignSystem.Spacing.extraLarge),
             transactionsTableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: DesignSystem.Spacing.large),
@@ -279,10 +279,6 @@ private extension MainViewController {
     @objc func addIncomeTapped() {
         viewModel.addIncomeTapped()
     }
-    
-    @objc func refreshData() {
-        refreshControl.endRefreshing()
-    }
 }
 
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
@@ -314,5 +310,11 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         80
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == viewModel.transactionGroups[indexPath.section].transactions.count - 1 {
+            viewModel.loadMoreTransactions()
+        }
     }
 }
