@@ -13,6 +13,7 @@ struct DesignSystem {
         static let primaryPurple = UIColor(red: 0.4, green: 0.2, blue: 0.8, alpha: 1.0)
         static let primaryPink = UIColor(red: 0.8, green: 0.2, blue: 0.6, alpha: 1.0)
         static let secondaryGreen = UIColor(red: 0.2, green: 0.8, blue: 0.4, alpha: 1.0)
+        static let secondaryGreen90 = UIColor(red: 0.2, green: 0.8, blue: 0.4, alpha: 0.9)
         static let secondaryDarkGreen = UIColor(red: 0.1, green: 0.6, blue: 0.3, alpha: 1.0)
         static let backgroundDark = UIColor(red: 0.1, green: 0.1, blue: 0.2, alpha: 1.0)
         static let backgroundMedium = UIColor(red: 0.2, green: 0.1, blue: 0.3, alpha: 1.0)

@@ -9,28 +9,43 @@ import UIKit
 import Combine
 
 final class AddTransactionViewController: UIViewController {
+    // MARK: - Constants
+    
+    private enum Constants {
+        static let categoryWidth: CGFloat = 100
+        static let categoryHeight: CGFloat = 80
+        static let itemSpacing: CGFloat = 12
+        
+        static let navigationTitle: String = "💸 New Transaction"
+        static let amountTitle: String = "💰 Amount (BTC)"
+        static let amountPlaceholder: String = "0.0"
+        static let categoryTitle: String = "🏷️ Category"
+        static let addTitle: String = "✅ Add"
+        
+        static let backImage: UIImage? = UIImage(systemName: "chevron.left")
+    }
+
     // MARK: - Private Properties
 
     private let viewModel: AddTransactionViewModel
+
     private var cancellables = Set<AnyCancellable>()
-    
+    private var amountContainer: UIView!
+    private var categoryContainer: UIView!
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let amountTextField = UITextField()
     private let categoryCollectionView: UICollectionView
     private let addButton = UIButton()
-    private var amountContainer: UIView!
-    private var categoryContainer: UIView!
-    
     private let backgroundGradient = CAGradientLayer()
     private let addButtonGradient = CAGradientLayer()
 
     private let categoryLayout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.minimumInteritemSpacing = 12
-        layout.minimumLineSpacing = 12
-        layout.itemSize = CGSize(width: 100, height: 80)
+        layout.minimumInteritemSpacing = Constants.itemSpacing
+        layout.minimumLineSpacing = Constants.itemSpacing
+        layout.itemSize = CGSize(width: Constants.categoryWidth, height: Constants.categoryHeight)
         return layout
     }()
     
@@ -55,12 +70,10 @@ final class AddTransactionViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        CATransaction.begin()
-        CATransaction.setDisableActions(true)
+
         backgroundGradient.frame = view.bounds
         addButtonGradient.frame = addButton.bounds
         addButtonGradient.cornerRadius = DesignSystem.CornerRadius.extraLarge
-        CATransaction.commit()
     }
         
     // MARK: - Actions
@@ -80,11 +93,11 @@ final class AddTransactionViewController: UIViewController {
 
 extension AddTransactionViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return TransactionCategory.allCases.count
+        TransactionCategory.allCases.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCell", for: indexPath) as! CategoryCell
+        let cell: CategoryCell = collectionView.dequeueReusableCell(for: indexPath)
         let category = TransactionCategory.allCases[indexPath.item]
         let isSelected = category == viewModel.selectedCategory
         cell.configure(with: category, isSelected: isSelected)
@@ -105,9 +118,9 @@ private extension AddTransactionViewController {
         backgroundGradient.applyMainBackgroundGradient()
         view.layer.insertSublayer(backgroundGradient, at: 0)
         
-        navigationItem.title = "💸 New Transaction"
+        navigationItem.title = Constants.navigationTitle
         navigationItem.leftBarButtonItem = UIBarButtonItem(
-            image: UIImage(systemName: "chevron.left"),
+            image: Constants.backImage,
             style: .plain,
             target: self,
             action: #selector(cancelTapped)
@@ -148,11 +161,11 @@ private extension AddTransactionViewController {
         amountContainer.translatesAutoresizingMaskIntoConstraints = false
         
         let amountLabel = UILabel()
-        amountLabel.text = "💰 Amount (BTC)"
+        amountLabel.text = Constants.amountTitle
         amountLabel.font = .systemFont(ofSize: 18, weight: .semibold)
         amountLabel.textColor = .textColorWhite
         
-        amountTextField.placeholder = "0.0"
+        amountTextField.placeholder = Constants.amountPlaceholder
         amountTextField.keyboardType = .decimalPad
         amountTextField.font = .systemFont(ofSize: 20, weight: .medium)
         amountTextField.borderStyle = .none
@@ -160,7 +173,7 @@ private extension AddTransactionViewController {
         amountTextField.layer.cornerRadius = DesignSystem.CornerRadius.small
         amountTextField.textColor = .textColorWhite
         amountTextField.attributedPlaceholder = NSAttributedString(
-            string: "0.0",
+            string: Constants.amountPlaceholder,
             attributes: [NSAttributedString.Key.foregroundColor: DesignSystem.Colors.textWhiteAlpha60]
         )
         amountTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: DesignSystem.Spacing.large, height: 0))
@@ -200,7 +213,7 @@ private extension AddTransactionViewController {
         categoryContainer.translatesAutoresizingMaskIntoConstraints = false
         
         let categoryLabel = UILabel()
-        categoryLabel.text = "🏷️ Category"
+        categoryLabel.text = Constants.categoryTitle
         categoryLabel.font = .systemFont(ofSize: 18, weight: .semibold)
         categoryLabel.textColor = .textColorWhite
         
@@ -210,7 +223,7 @@ private extension AddTransactionViewController {
         categoryCollectionView.backgroundColor = .clear
         categoryCollectionView.delegate = self
         categoryCollectionView.dataSource = self
-        categoryCollectionView.register(CategoryCell.self, forCellWithReuseIdentifier: "CategoryCell")
+        categoryCollectionView.register(CategoryCell.self)
         categoryCollectionView.showsHorizontalScrollIndicator = false
         
         categoryContainer.addSubview(categoryCollectionView)
@@ -236,7 +249,7 @@ private extension AddTransactionViewController {
         contentView.addSubview(addButton)
         addButton.translatesAutoresizingMaskIntoConstraints = false
         
-        addButton.setTitle("✅ Add", for: .normal)
+        addButton.setTitle(Constants.addTitle, for: .normal)
         
         addButtonGradient.applyButtonBackgroundGradient()
         addButtonGradient.masksToBounds = true
@@ -273,16 +286,5 @@ private extension AddTransactionViewController {
                 self?.addButton.alpha = isValid ? 1.0 : 0.6
             }
             .store(in: &cancellables)
-    }
-}
-
-// MARK: - UITextField Publisher Extension
-extension UITextField {
-    var textPublisher: AnyPublisher<String, Never> {
-        NotificationCenter.default
-            .publisher(for: UITextField.textDidChangeNotification, object: self)
-            .compactMap { $0.object as? UITextField }
-            .map { $0.text ?? "" }
-            .eraseToAnyPublisher()
     }
 }

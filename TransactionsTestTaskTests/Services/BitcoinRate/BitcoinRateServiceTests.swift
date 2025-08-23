@@ -187,7 +187,7 @@ final class BitcoinRateServiceTests: XCTestCase {
         
         let mockAnalyticsService = MockAnalyticsService()
         let mockNetworkService = MockBitcoinRateNetworkService()
-        mockNetworkService.mockResponse = BitcoinRateResponse(USD: .init(last: networkRate, symbol: "$"))
+        mockNetworkService.mockResponse = BitcoinRateDTO(usd: .init(last: networkRate, symbol: "$"))
         
         let mockNetworkReachability = MockNetworkReachability()
         mockNetworkReachability.mockIsConnected = true
@@ -317,7 +317,7 @@ final class BitcoinRateServiceTests: XCTestCase {
         
         let mockAnalyticsService = MockAnalyticsService()
         let mockNetworkService = MockBitcoinRateNetworkService()
-        mockNetworkService.mockResponse = BitcoinRateResponse(USD: .init(last: 45000.0, symbol: "$"))
+        mockNetworkService.mockResponse = BitcoinRateDTO(usd: .init(last: 45000.0, symbol: "$"))
         
         let mockNetworkReachability = MockNetworkReachability()
         mockNetworkReachability.mockIsConnected = true

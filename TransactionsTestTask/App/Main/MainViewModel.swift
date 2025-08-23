@@ -13,7 +13,7 @@ final class MainViewModel: ObservableObject {
     
     @Published var balance: Double = 0.0
     @Published var bitcoinRate: Double = 0.0
-    @Published var transactionGroups: [TransactionGroup] = []
+    @Published var transactionGroups: [TransactionGroupViewModel] = []
     @Published var isLoading: Bool = false
     
     let onAddTransaction = PassthroughSubject<Void, Never>()
@@ -69,7 +69,7 @@ private extension MainViewModel {
         transactionService.transactionsPublisher
             .receive(on: DispatchQueue.main)
             .sink { [weak self] groups in
-                self?.transactionGroups = groups
+                self?.transactionGroups = groups.map { TransactionGroupViewModel(from: $0) }
             }
             .store(in: &cancellables)
 

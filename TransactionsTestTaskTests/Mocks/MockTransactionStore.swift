@@ -8,11 +8,7 @@
 @testable import TransactionsTestTask
 
 final class MockTransactionStore: TransactionStore {
-    var mockTransactions: [Transaction] = [] {
-        didSet {
-            print("HERE mock = ", mockTransactions)
-        }
-    }
+    var mockTransactions: [Transaction] = []
     var mockTotalCount: Int = 0
     var mockCurrentBalance: Double = 0.0
     var mockError: Error?

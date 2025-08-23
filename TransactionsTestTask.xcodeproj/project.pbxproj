@@ -33,6 +33,13 @@
 		CB5EA8BD2E5A452C0089791D /* MockBitcoinRateNetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EA8BC2E5A452C0089791D /* MockBitcoinRateNetworkService.swift */; };
 		CB5EA8BF2E5A453B0089791D /* MockNetworkReachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EA8BE2E5A453B0089791D /* MockNetworkReachability.swift */; };
 		CB5EA8C12E5A45510089791D /* MockBitcoinRateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EA8C02E5A45510089791D /* MockBitcoinRateStore.swift */; };
+		CB5EA8CB2E5A676D0089791D /* BitcoinRateDTO.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EA8C42E5A676D0089791D /* BitcoinRateDTO.swift */; };
+		CB5EA8CF2E5A676D0089791D /* TransactionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EA8C92E5A676D0089791D /* TransactionViewModel.swift */; };
+		CB5EA8D02E5A676D0089791D /* BitcoinRateBO.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EA8C22E5A676D0089791D /* BitcoinRateBO.swift */; };
+		CB5EA8D52E5A6E510089791D /* UITableView+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EA8D42E5A6E510089791D /* UITableView+Registration.swift */; };
+		CB5EA8D72E5A6E640089791D /* UICollectionView+Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EA8D62E5A6E640089791D /* UICollectionView+Registration.swift */; };
+		CB5EA8D92E5A736C0089791D /* UITextField+TextPublisher.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EA8D82E5A736C0089791D /* UITextField+TextPublisher.swift */; };
+		CB5EA8DB2E5A73BE0089791D /* TransactionGroupViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5EA8DA2E5A73BE0089791D /* TransactionGroupViewModel.swift */; };
 		CB8ABA052E58A96E003AE4B9 /* BaseCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8ABA042E58A96E003AE4B9 /* BaseCoordinator.swift */; };
 		CB8ABA082E58A9AB003AE4B9 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8ABA072E58A9AB003AE4B9 /* MainCoordinator.swift */; };
 		CB8ABA0A2E58AABE003AE4B9 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB8ABA092E58AABE003AE4B9 /* MainViewModel.swift */; };
@@ -105,6 +112,13 @@
 		CB5EA8BC2E5A452C0089791D /* MockBitcoinRateNetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBitcoinRateNetworkService.swift; sourceTree = "<group>"; };
 		CB5EA8BE2E5A453B0089791D /* MockNetworkReachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkReachability.swift; sourceTree = "<group>"; };
 		CB5EA8C02E5A45510089791D /* MockBitcoinRateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBitcoinRateStore.swift; sourceTree = "<group>"; };
+		CB5EA8C22E5A676D0089791D /* BitcoinRateBO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinRateBO.swift; sourceTree = "<group>"; };
+		CB5EA8C42E5A676D0089791D /* BitcoinRateDTO.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinRateDTO.swift; sourceTree = "<group>"; };
+		CB5EA8C92E5A676D0089791D /* TransactionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionViewModel.swift; sourceTree = "<group>"; };
+		CB5EA8D42E5A6E510089791D /* UITableView+Registration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+Registration.swift"; sourceTree = "<group>"; };
+		CB5EA8D62E5A6E640089791D /* UICollectionView+Registration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Registration.swift"; sourceTree = "<group>"; };
+		CB5EA8D82E5A736C0089791D /* UITextField+TextPublisher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+TextPublisher.swift"; sourceTree = "<group>"; };
+		CB5EA8DA2E5A73BE0089791D /* TransactionGroupViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionGroupViewModel.swift; sourceTree = "<group>"; };
 		CB8ABA042E58A96E003AE4B9 /* BaseCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCoordinator.swift; sourceTree = "<group>"; };
 		CB8ABA072E58A9AB003AE4B9 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		CB8ABA092E58AABE003AE4B9 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
@@ -213,6 +227,7 @@
 				CB8ABA572E59BCCB003AE4B9 /* Storage */,
 				CB8ABA1D2E58AC00003AE4B9 /* Models */,
 				CB8ABA422E58B5EA003AE4B9 /* Network */,
+				CB5EA8D12E5A6E2A0089791D /* Extensions */,
 				CB8AB9FE2E58A841003AE4B9 /* Resources */,
 			);
 			path = TransactionsTestTask;
@@ -294,6 +309,42 @@
 			path = Mocks;
 			sourceTree = "<group>";
 		};
+		CB5EA8C62E5A676D0089791D /* BitcoinRate */ = {
+			isa = PBXGroup;
+			children = (
+				CB5EA8C22E5A676D0089791D /* BitcoinRateBO.swift */,
+				CB5EA8C42E5A676D0089791D /* BitcoinRateDTO.swift */,
+			);
+			path = BitcoinRate;
+			sourceTree = "<group>";
+		};
+		CB5EA8CA2E5A676D0089791D /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				CB5EA8DA2E5A73BE0089791D /* TransactionGroupViewModel.swift */,
+				CB5EA8C92E5A676D0089791D /* TransactionViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		CB5EA8D12E5A6E2A0089791D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				CB5EA8D32E5A6E3B0089791D /* UIKit */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		CB5EA8D32E5A6E3B0089791D /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				CB5EA8D42E5A6E510089791D /* UITableView+Registration.swift */,
+				CB5EA8D62E5A6E640089791D /* UICollectionView+Registration.swift */,
+				CB5EA8D82E5A736C0089791D /* UITextField+TextPublisher.swift */,
+			);
+			path = UIKit;
+			sourceTree = "<group>";
+		};
 		CB8AB9FE2E58A841003AE4B9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -329,6 +380,7 @@
 		CB8ABA062E58A98D003AE4B9 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				CB5EA8CA2E5A676D0089791D /* ViewModels */,
 				CB8ABA0D2E58AB08003AE4B9 /* Views */,
 				CB8ABA0B2E58AAF1003AE4B9 /* MainViewController.swift */,
 				CB8ABA092E58AABE003AE4B9 /* MainViewModel.swift */,
@@ -368,6 +420,7 @@
 		CB8ABA1D2E58AC00003AE4B9 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				CB5EA8C62E5A676D0089791D /* BitcoinRate */,
 				CB8ABA482E58B7DF003AE4B9 /* Transactions */,
 			);
 			path = Models;
@@ -555,6 +608,7 @@
 				CB8ABA342E58ACE2003AE4B9 /* LoggingPlugin.swift in Sources */,
 				CB5EA8A22E5A14110089791D /* TransactionEvent.swift in Sources */,
 				CB5EA8A42E5A142C0089791D /* NetworkEvent.swift in Sources */,
+				CB5EA8D92E5A736C0089791D /* UITextField+TextPublisher.swift in Sources */,
 				CB8ABA362E58ACE2003AE4B9 /* NetworkRequest.swift in Sources */,
 				CB5EA8A02E5A13760089791D /* BitcoinRateEvent.swift in Sources */,
 				CB8ABA372E58ACE2003AE4B9 /* HTTPMethod.swift in Sources */,
@@ -572,6 +626,7 @@
 				CB8ABA0F2E58AB18003AE4B9 /* TransactionCell.swift in Sources */,
 				CB5EA8AB2E5A1F170089791D /* BitcoinRateStore.swift in Sources */,
 				CB5EA8A62E5A144A0089791D /* AppLifecycleEvent.swift in Sources */,
+				CB5EA8D52E5A6E510089791D /* UITableView+Registration.swift in Sources */,
 				CB8ABA1B2E58ABE8003AE4B9 /* CategoryCell.swift in Sources */,
 				0D1540612D22EF5D00D6D63F /* AnalyticsEvent.swift in Sources */,
 				CB8ABA0C2E58AAF1003AE4B9 /* MainViewController.swift in Sources */,
@@ -580,9 +635,14 @@
 				CB8ABA112E58AB3E003AE4B9 /* TransactionHeaderView.swift in Sources */,
 				0DF1D1452D22DD06001626E7 /* BitcoinRateService.swift in Sources */,
 				CB8ABA162E58ABD1003AE4B9 /* AddTransactionCoordinator.swift in Sources */,
+				CB5EA8CB2E5A676D0089791D /* BitcoinRateDTO.swift in Sources */,
+				CB5EA8CF2E5A676D0089791D /* TransactionViewModel.swift in Sources */,
+				CB5EA8D02E5A676D0089791D /* BitcoinRateBO.swift in Sources */,
+				CB5EA8DB2E5A73BE0089791D /* TransactionGroupViewModel.swift in Sources */,
 				CB8ABA232E58AC87003AE4B9 /* TransactionService.swift in Sources */,
 				0DF1D1472D22DD4A001626E7 /* AnalyticsService.swift in Sources */,
 				CB8ABA142E58ABB5003AE4B9 /* AddTransactionViewController.swift in Sources */,
+				CB5EA8D72E5A6E640089791D /* UICollectionView+Registration.swift in Sources */,
 				CB8ABA082E58A9AB003AE4B9 /* MainCoordinator.swift in Sources */,
 				CB8ABA212E58AC2C003AE4B9 /* AppCoordinator.swift in Sources */,
 				CB5EA89C2E5A13220089791D /* AnalyticsEventProtocol.swift in Sources */,
