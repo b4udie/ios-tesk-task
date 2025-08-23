@@ -19,4 +19,11 @@ struct Transaction {
         self.type = type
         self.date = date
     }
+    
+    init(id: UUID, amount: Double, type: TransactionType, date: Date) {
+        self.id = id
+        self.amount = amount
+        self.type = type
+        self.date = date
+    }
 }

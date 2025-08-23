@@ -20,7 +20,11 @@ final class MainViewModel: ObservableObject {
     let onAddIncome = PassthroughSubject<String, Never>()
     let onShowAddIncomeAlert = PassthroughSubject<Void, Never>()
     let onShowAddIncomeErrorAlert = PassthroughSubject<String, Never>()
-
+    
+    var hasMorePages: Bool {
+        transactionService.hasMorePages
+    }
+    
     // MARK: - Private Properties
     
     private let transactionService: TransactionService
@@ -49,7 +53,7 @@ final class MainViewModel: ObservableObject {
     }
     
     func loadMoreTransactions() {
-        // Pagination implementation for CoreData, but not sure about it, before CoreData pagination was useless
+        transactionService.loadNextPage()
     }
 }
 
@@ -80,7 +84,7 @@ private extension MainViewModel {
 
         onAddIncome
             .sink { [weak self] value in
-                if let amount = Double(value) {
+                if let amount = Double(value), amount > 0.0 {
                     self?.transactionService.addIncome(amount)
                 } else {
                     self?.onShowAddIncomeErrorAlert.send("Incorrect input")
