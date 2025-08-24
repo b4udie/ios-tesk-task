@@ -8,61 +8,80 @@
 import Foundation
 import Combine
 
-final class AddTransactionViewModel: ObservableObject {
-    // MARK: - Public Properties
+final class AddTransactionViewModel {
 
-    @Published var amount: String = ""
-    @Published var selectedCategory: TransactionCategory = .other
-    @Published var isValid: Bool = false
-    
-    let onTransactionAdded = PassthroughSubject<Void, Never>()
-    let onCancel = PassthroughSubject<Void, Never>()
-    
-    // MARK: - Private Properties
+    // MARK: - Inputs/Outputs
+
+    struct Inputs {
+        let setAmount: (String) -> Void
+        let selectCategory: (TransactionCategory) -> Void
+        let addTap: () -> Void
+        let cancelTap: () -> Void
+    }
+
+    struct Outputs {
+        let isValid: AnyPublisher<Bool, Never>
+        let selectedCategory: AnyPublisher<TransactionCategory, Never>
+        let transactionAdded: AnyPublisher<Void, Never>
+        let canceled: AnyPublisher<Void, Never>
+    }
+
+    let output: Outputs
+    lazy var inputs: Inputs = {
+        Inputs(
+            setAmount: { [weak self] text in self?.amountSubject.send(text) },
+            selectCategory: { [weak self] cat in self?.categorySubject.send(cat) },
+            addTap: { [weak self] in self?.handleAdd() },
+            cancelTap: { [weak self] in self?.canceledSubject.send(()) }
+        )
+    }()
+
+    // MARK: - Dependencies
 
     private let transactionService: TransactionService
+
+    // MARK: - Internal subjects
+
+    private let amountSubject = CurrentValueSubject<String, Never>("")
+    private let categorySubject = CurrentValueSubject<TransactionCategory, Never>(.other)
+    private let addedSubject = PassthroughSubject<Void, Never>()
+    private let canceledSubject = PassthroughSubject<Void, Never>()
+
     private var cancellables = Set<AnyCancellable>()
-    
-    // MARK: - Lifecycle
+
+    // MARK: - Init
 
     init(transactionService: TransactionService = ServicesAssembler.transactionService()) {
         self.transactionService = transactionService
-        
-        setupBindings()
-    }
-    
-    // MARK: - Public Methods
 
-    func addTransaction() {
-        guard let amountValue = Double(amount), amountValue > 0 else { return }
-        
-        let transaction = Transaction(
-            amount: amountValue,
-            type: .expense(selectedCategory)
+        let isValid = amountSubject
+            .map { Double($0) ?? 0 }
+            .map { $0 > 0 }
+            .removeDuplicates()
+            .eraseToAnyPublisher()
+
+        output = Outputs(
+            isValid: isValid,
+            selectedCategory: categorySubject.eraseToAnyPublisher(),
+            transactionAdded: addedSubject.eraseToAnyPublisher(),
+            canceled: canceledSubject.eraseToAnyPublisher()
         )
-        
-        transactionService.addTransaction(transaction)
-        onTransactionAdded.send()
-    }
-    
-    func cancel() {
-        onCancel.send()
-    }
-    
-    func setCategory(_ category: TransactionCategory) {
-        selectedCategory = category
     }
 }
 
-// MARK: - Private Methods
+// MARK: - Private
 
 private extension AddTransactionViewModel {
-    func setupBindings() {
-        $amount
-            .map { !$0.isEmpty && Double($0) != nil && Double($0)! > 0 }
-            .sink { [weak self] isValid in
-                self?.isValid = isValid
-            }
-            .store(in: &cancellables)
+    func handleAdd() {
+        let amountText = amountSubject.value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let amount = Double(amountText), amount > 0 else { return }
+
+        let transaction = Transaction(
+            amount: amount,
+            type: .expense(categorySubject.value)
+        )
+        
+        transactionService.addTransaction(transaction)
+        addedSubject.send(())
     }
 }

@@ -8,86 +8,89 @@
 import Foundation
 import Combine
 
-final class MainViewModel: ObservableObject {
-    // MARK: - Public Properties
-    
-    @Published var balance: Double = 0.0
-    @Published var bitcoinRate: Double = 0.0
-    @Published var transactionGroups: [TransactionGroupViewModel] = []
-    @Published var isLoading: Bool = false
-    
-    let onAddTransaction = PassthroughSubject<Void, Never>()
-    let onAddIncome = PassthroughSubject<String, Never>()
-    let onShowAddIncomeAlert = PassthroughSubject<Void, Never>()
-    let onShowAddIncomeErrorAlert = PassthroughSubject<String, Never>()
-    
-    var hasMorePages: Bool {
-        transactionService.hasMorePages
+final class MainViewModel {
+
+    // MARK: Inputs/Outputs
+
+    struct Inputs {
+        let addTransactionTap: () -> Void
+        let addIncomeTap: () -> Void
+        let incomeEntered: (String) -> Void
+        let loadMore: () -> Void
     }
-    
-    // MARK: - Private Properties
-    
+
+    struct Outputs {
+        let balance: AnyPublisher<Double, Never>
+        let bitcoinRate: AnyPublisher<Double, Never>
+        let transactionGroups: AnyPublisher<[TransactionGroupViewModel], Never>
+
+        let showAddTransaction: AnyPublisher<Void, Never>
+        let showAddIncomeAlert: AnyPublisher<Void, Never>
+        let showError: AnyPublisher<String, Never>
+    }
+
+    let output: Outputs
+    lazy var inputs: Inputs = {
+        Inputs(
+            addTransactionTap: { [weak self] in self?.addTransactionSubject.send(()) },
+            addIncomeTap: { [weak self] in self?.addIncomeTapSubject.send(()) },
+            incomeEntered: { [weak self] text in self?.incomeEnteredSubject.send(text) },
+            loadMore: { [weak self] in self?.loadMoreSubject.send(()) }
+        )
+    }()
+
+    // MARK: Dependencies
+
     private let transactionService: TransactionService
     private let bitcoinRateService: BitcoinRateService
+
+    // MARK: Internal subjects
+
+    private let addTransactionSubject = PassthroughSubject<Void, Never>()
+    private let addIncomeTapSubject = PassthroughSubject<Void, Never>()
+    private let incomeEnteredSubject = PassthroughSubject<String, Never>()
+    private let loadMoreSubject = PassthroughSubject<Void, Never>()
+    private let showErrorSubject = PassthroughSubject<String, Never>()
+
     private var cancellables = Set<AnyCancellable>()
-    
-    // MARK: - Lifecycle
-    
-    init(transactionService: TransactionService = ServicesAssembler.transactionService(),
-         bitcoinRateService: BitcoinRateService = ServicesAssembler.bitcoinRateService()) {
+
+    // MARK: Init
+
+    init(
+        transactionService: TransactionService = ServicesAssembler.transactionService(),
+        bitcoinRateService: BitcoinRateService = ServicesAssembler.bitcoinRateService()
+    ) {
         self.transactionService = transactionService
         self.bitcoinRateService = bitcoinRateService
-        setupBindings()
-    }
-    
-    // MARK: - Public Methods
-    
-    func addTransactionTapped() {
-        onAddTransaction.send()
-    }
-    
-    func addIncomeTapped() {
-        onShowAddIncomeAlert.send()
-    }
-    
-    func loadMoreTransactions() {
-        transactionService.loadNextPage()
-    }
-}
 
-// MARK: - Private Methods
+        let balance = transactionService.balancePublisher.eraseToAnyPublisher()
+        let groups = transactionService.transactionsPublisher
+            .map { $0.map { TransactionGroupViewModel(from: $0) } }
+            .eraseToAnyPublisher()
+        let rate = bitcoinRateService.ratePublisher.eraseToAnyPublisher()
 
-private extension MainViewModel {
-    func setupBindings() {
-        transactionService.balancePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] balance in
-                self?.balance = balance
-            }
-            .store(in: &cancellables)
+        output = Outputs(
+            balance: balance,
+            bitcoinRate: rate,
+            transactionGroups: groups,
+            showAddTransaction: addTransactionSubject.eraseToAnyPublisher(),
+            showAddIncomeAlert: addIncomeTapSubject.eraseToAnyPublisher(),
+            showError: showErrorSubject.eraseToAnyPublisher()
+        )
 
-        transactionService.transactionsPublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] groups in
-                self?.transactionGroups = groups.map { TransactionGroupViewModel(from: $0) }
-            }
-            .store(in: &cancellables)
-
-        bitcoinRateService.ratePublisher
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] rate in
-                self?.bitcoinRate = rate
-            }
-            .store(in: &cancellables)
-
-        onAddIncome
-            .sink { [weak self] value in
-                if let amount = Double(value), amount > 0.0 {
-                    self?.transactionService.addIncome(amount)
+        incomeEnteredSubject
+            .sink { [weak self] text in
+                guard let self else { return }
+                if let amount = Double(text), amount > 0 {
+                    self.transactionService.addIncome(amount)
                 } else {
-                    self?.onShowAddIncomeErrorAlert.send("Incorrect input")
+                    self.showErrorSubject.send("Incorrect input")
                 }
             }
+            .store(in: &cancellables)
+
+        loadMoreSubject
+            .sink { [weak self] in self?.transactionService.loadNextPage() }
             .store(in: &cancellables)
     }
 }

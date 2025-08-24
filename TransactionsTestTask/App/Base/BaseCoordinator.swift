@@ -20,7 +20,7 @@ protocol Coordinator: AnyObject {
 class BaseCoordinator: Coordinator {
     var navigationController = UINavigationController()
     var childCoordinators = [Coordinator]()
-    var parentCoordinator: Coordinator?
+    weak var parentCoordinator: Coordinator?
     
     func start() {
         fatalError("Start method should be implemented.")
@@ -38,9 +38,6 @@ class BaseCoordinator: Coordinator {
     }
     
     func didFinish(coordinator: Coordinator) {
-        if let index = childCoordinators.firstIndex(where: { $0 === coordinator }) {
-            childCoordinators.remove(at: index)
-        }
+        childCoordinators.removeAll { $0 === coordinator }
     }
 }
-

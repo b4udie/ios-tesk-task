@@ -7,9 +7,9 @@
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
     var window: UIWindow?
-
+    private var appCoordinator: AppCoordinator?
+    
     func scene(
         _ scene: UIScene,
         willConnectTo session: UISceneSession,
@@ -19,6 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(windowScene: windowScene)
         let appCoordinator = AppCoordinator(window: window!)
+        self.appCoordinator = appCoordinator
         appCoordinator.start()
     }
 }
