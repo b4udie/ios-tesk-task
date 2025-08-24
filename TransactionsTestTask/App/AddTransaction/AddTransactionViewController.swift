@@ -29,7 +29,6 @@ final class AddTransactionViewController: UIViewController {
 
     private let viewModel: AddTransactionViewModel
 
-    private var cancellables = Set<AnyCancellable>()
     private var amountContainer: UIView!
     private var categoryContainer: UIView!
     private let scrollView = UIScrollView()
@@ -39,6 +38,9 @@ final class AddTransactionViewController: UIViewController {
     private let addButton = UIButton()
     private let backgroundGradient = CAGradientLayer()
     private let addButtonGradient = CAGradientLayer()
+
+    private var selectedCategory: TransactionCategory = .other
+    private var cancellables = Set<AnyCancellable>()
 
     private let categoryLayout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
@@ -61,11 +63,14 @@ final class AddTransactionViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
     
         setupUI()
-        setupBindings()
+        bindOutputs()
+        bindInputs()
     }
     
     override func viewDidLayoutSubviews() {
@@ -80,38 +85,46 @@ final class AddTransactionViewController: UIViewController {
 
     @objc
     private func cancelTapped() {
-        viewModel.cancel()
+        viewModel.inputs.cancelTap()
     }
-    
+
     @objc
     private func addTapped() {
-        viewModel.addTransaction()
+        viewModel.inputs.addTap()
     }
 }
 
-// MARK: - UICollectionViewDataSource & UICollectionViewDelegate
+// MARK: - Bindings
 
-extension AddTransactionViewController: UICollectionViewDataSource, UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        TransactionCategory.allCases.count
+private extension AddTransactionViewController {
+    func bindOutputs() {
+        viewModel.output.isValid
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isValid in
+                self?.addButton.isEnabled = isValid
+                self?.addButton.alpha = isValid ? 1.0 : 0.6
+            }
+            .store(in: &cancellables)
+
+        viewModel.output.selectedCategory
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] category in
+                self?.selectedCategory = category
+                self?.categoryCollectionView.reloadData()
+            }
+            .store(in: &cancellables)
     }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell: CategoryCell = collectionView.dequeueReusableCell(for: indexPath)
-        let category = TransactionCategory.allCases[indexPath.item]
-        let isSelected = category == viewModel.selectedCategory
-        cell.configure(with: category, isSelected: isSelected)
-        return cell
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let category = TransactionCategory.allCases[indexPath.item]
-        viewModel.setCategory(category)
-        collectionView.reloadData()
+
+    func bindInputs() {
+        amountTextField.textPublisher
+            .sink { [weak self] text in
+                self?.viewModel.inputs.setAmount(text)
+            }
+            .store(in: &cancellables)
     }
 }
 
-// MARK: - Private Methods
+// MARK: - UI
 
 private extension AddTransactionViewController {
     func setupUI() {
@@ -271,20 +284,27 @@ private extension AddTransactionViewController {
         
         addButton.layoutIfNeeded()
     }
-    
-    func setupBindings() {
-        amountTextField.textPublisher
-            .sink { [weak self] text in
-                self?.viewModel.amount = text
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$isValid
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isValid in
-                self?.addButton.isEnabled = isValid
-                self?.addButton.alpha = isValid ? 1.0 : 0.6
-            }
-            .store(in: &cancellables)
+}
+
+// MARK: - UICollectionViewDataSource & UICollectionViewDelegate
+
+extension AddTransactionViewController: UICollectionViewDataSource, UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        TransactionCategory.allCases.count
+    }
+
+    func collectionView(
+        _ collectionView: UICollectionView,
+        cellForItemAt indexPath: IndexPath
+    ) -> UICollectionViewCell {
+        let cell: CategoryCell = collectionView.dequeueReusableCell(for: indexPath)
+        let category = TransactionCategory.allCases[indexPath.item]
+        let isSelected = category == selectedCategory
+        cell.configure(with: category, isSelected: isSelected)
+        return cell
+    }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        viewModel.inputs.selectCategory(TransactionCategory.allCases[indexPath.item])
     }
 }

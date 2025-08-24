@@ -34,6 +34,8 @@ final class MainViewController: UIViewController {
     private let backgroundGradient = CAGradientLayer()
     private let headerGradient = CAGradientLayer()
     private let addButtonGradient = CAGradientLayer()
+
+    private var groups: [TransactionGroupViewModel] = []
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: - Lifecycle
@@ -50,7 +52,7 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        setupBindings()
+        bindOutputs()
     }
     
     override func viewDidLayoutSubviews() {
@@ -67,7 +69,45 @@ final class MainViewController: UIViewController {
     }
 }
 
-// MARK: - Private Methods
+// MARK: Bind outputs + actions
+
+private extension MainViewController {
+    func bindOutputs() {
+        viewModel.output.balance
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] balance in
+                self?.balanceLabel.text = String(format: "%.4f BTC", balance)
+            }
+            .store(in: &cancellables)
+
+        viewModel.output.bitcoinRate
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] rate in
+                self?.bitcoinRateLabel.text = String(format: "BTC: $%.2f", rate)
+            }
+            .store(in: &cancellables)
+
+        viewModel.output.transactionGroups
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] groups in
+                self?.groups = groups
+                self?.transactionsTableView.reloadData()
+            }
+            .store(in: &cancellables)
+    }
+
+    @objc
+    func addTransactionTapped() {
+        viewModel.inputs.addTransactionTap()
+    }
+    
+    @objc
+    func addIncomeTapped() {
+        viewModel.inputs.addIncomeTap()
+    }
+}
+
+// MARK: - UI
 
 private extension MainViewController {
     func setupUI() {
@@ -238,7 +278,6 @@ private extension MainViewController {
     func setupTransactionsTableView() {
         contentView.addSubview(transactionsTableView)
         transactionsTableView.translatesAutoresizingMaskIntoConstraints = false
-        
         transactionsTableView.delegate = self
         transactionsTableView.dataSource = self
         transactionsTableView.register(TransactionCell.self)
@@ -255,65 +294,29 @@ private extension MainViewController {
             transactionsTableView.heightAnchor.constraint(equalToConstant: 600)
         ])
     }
-    
-    func setupBindings() {
-        viewModel.$balance
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] balance in
-                self?.balanceLabel.text = String(format: "%.4f BTC", balance)
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$bitcoinRate
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] rate in
-                self?.bitcoinRateLabel.text = String(format: "BTC: $%.2f", rate)
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$transactionGroups
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
-                self?.transactionsTableView.reloadData()
-            }
-            .store(in: &cancellables)
-    }
-}
-
-// MARK: - Actions
-
-private extension MainViewController {
-    @objc func addTransactionTapped() {
-        viewModel.addTransactionTapped()
-    }
-    
-    @objc func addIncomeTapped() {
-        viewModel.addIncomeTapped()
-    }
 }
 
 // MARK: - UITableViewDataSource & UITableViewDelegate
 
 extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
-        viewModel.transactionGroups.count
+        groups.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        viewModel.transactionGroups[section].transactions.count
+        groups[section].transactions.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: TransactionCell = tableView.dequeueReusableCell(for: indexPath)
-        let transactionViewModel = viewModel.transactionGroups[indexPath.section].transactions[indexPath.row]
-        cell.configure(with: transactionViewModel)
+        let viewModel = groups[indexPath.section].transactions[indexPath.row]
+        cell.configure(with: viewModel)
         return cell
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView: TransactionHeaderView = tableView.dequeueReusableHeaderFooter()
-        let dateString = viewModel.transactionGroups[section].date
-        headerView.configure(with: dateString)
+        headerView.configure(with: groups[section].date)
         return headerView
     }
     
@@ -326,8 +329,8 @@ extension MainViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if indexPath.row == viewModel.transactionGroups[indexPath.section].transactions.count - 1 {
-                viewModel.loadMoreTransactions()
+        if indexPath.row == groups[indexPath.section].transactions.count - 1 {
+            viewModel.inputs.loadMore()
         }
     }
 }

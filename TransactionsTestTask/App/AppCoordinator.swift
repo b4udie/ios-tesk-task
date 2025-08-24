@@ -9,26 +9,27 @@ import UIKit
 import Combine
 
 final class AppCoordinator: BaseCoordinator {
-    private var window: UIWindow
-    
+    private let window: UIWindow
+
     init(window: UIWindow) {
         self.window = window
         super.init()
     }
-    
+
     override func start() {
-        window.makeKeyAndVisible()
-        showMainScreen()
+        showMain()
     }
-    
-    private func showMainScreen() {
+
+    private func showMain() {
         removeChildCoordinators()
-        
-        let coordinator = MainCoordinator()
-        coordinator.navigationController = UINavigationController()
-        start(coordinator: coordinator)
-        
-        window.rootViewController = coordinator.navigationController
+
+        let nav = UINavigationController()
+        window.rootViewController = nav
+        window.makeKeyAndVisible()
+
+        let main = MainCoordinator()
+        main.navigationController = nav
+        start(coordinator: main)
     }
 }
 

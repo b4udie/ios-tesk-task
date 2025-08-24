@@ -31,23 +31,22 @@ final class TransactionServiceImpl: TransactionService {
     private var allTransactions: [Transaction] = []
     private var isLoading = false
 
-    init(transactionStore: TransactionStore, analyticsService: AnalyticsService) {
-        self.store = transactionStore
-        self.analyticsService = analyticsService
-        loadInitialTransactions()
-        loadCurrentBalance()
-    }
-
     var transactionsPublisher: AnyPublisher<[TransactionGroup], Never> {
         transactionGroupsSubject.eraseToAnyPublisher()
     }
-
     var balancePublisher: AnyPublisher<Double, Never> {
         balanceSubject.eraseToAnyPublisher()
     }
     var hasMorePages: Bool {
         let totalCount = (try? store.fetchTotalCount()) ?? 0
         return (currentPage + 1) * pageSize < totalCount + pageSize
+    }
+
+    init(transactionStore: TransactionStore, analyticsService: AnalyticsService) {
+        self.store = transactionStore
+        self.analyticsService = analyticsService
+        loadInitialTransactions()
+        loadCurrentBalance()
     }
 
     func addTransaction(_ transaction: Transaction) {

@@ -20,24 +20,18 @@ final class MainCoordinator: BaseCoordinator {
         let viewModel = MainViewModel()
         let viewController = MainViewController(viewModel: viewModel)
         
-        viewModel.onAddTransaction
-            .sink { [weak self] in
-                self?.showAddTransaction()
-            }
+        viewModel.output.showAddTransaction
+            .sink { [weak self] in self?.showAddTransaction() }
             .store(in: &cancellables)
-        
-        viewModel.onShowAddIncomeAlert
-            .sink { [weak self] in
-                self?.showAddIncomeAlert()
-            }
+
+        viewModel.output.showAddIncomeAlert
+            .sink { [weak self] in self?.showAddIncomeAlert() }
             .store(in: &cancellables)
-        
-        viewModel.onShowAddIncomeErrorAlert
-            .sink { [weak self] message in
-                self?.showErrorAlert(with: message)
-            }
+
+        viewModel.output.showError
+            .sink { [weak self] message in self?.showErrorAlert(with: message) }
             .store(in: &cancellables)
-        
+
         self.viewModel = viewModel
         navigationController.pushViewController(viewController, animated: false)
     }
@@ -59,29 +53,26 @@ private extension MainCoordinator {
             preferredStyle: .alert
         )
         
-        alert.addTextField { textField in
-            textField.placeholder = "0.0"
-            textField.keyboardType = .decimalPad
+        alert.addTextField {
+            $0.placeholder = "0.0"
+            $0.keyboardType = .decimalPad
         }
         
-        let addAction = UIAlertAction(title: "Add", style: .default) { [weak self] _ in
-            if let text = alert.textFields?.first?.text {
-                self?.viewModel?.onAddIncome.send(text)
-            }
+        let addAction = UIAlertAction(title: "Add", style: .default) { [weak self, weak alert] _ in
+            guard
+                let viewModel = self?.viewModel,
+                let text = alert?.textFields?.first?.text
+            else { return }
+            viewModel.inputs.incomeEntered(text)
         }
-        
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel)
-        
         alert.addAction(addAction)
-        alert.addAction(cancelAction)
-        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         navigationController.present(alert, animated: true)
     }
-    
+
     func showErrorAlert(with message: String) {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        let okAction = UIAlertAction(title: "OK", style: .default)
-        alert.addAction(okAction)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
         navigationController.present(alert, animated: true)
     }
 }
