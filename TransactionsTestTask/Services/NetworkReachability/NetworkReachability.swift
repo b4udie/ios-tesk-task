@@ -11,7 +11,7 @@ protocol NetworkReachability: AnyObject {
 final class NetworkReachabilityImpl: NetworkReachability {
     private let monitor = NWPathMonitor()
     private let queue = DispatchQueue(label: "network.reachability", qos: .utility)
-    private let subject = PassthroughSubject<Bool, Never>()
+    private let subject = CurrentValueSubject<Bool, Never>(false)
     private var last: Bool?
 
     var isConnected: Bool {
