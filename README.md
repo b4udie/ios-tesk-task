@@ -5,7 +5,7 @@
 
 ## 🎯 Project Overview
 
-TransactionsTestTask is a sophisticated iOS application that allows users to manage Bitcoin transactions with real-time Bitcoin rate monitoring, offline support, and comprehensive analytics. The app demonstrates modern iOS development practices including reactive programming, dependency injection, and clean architecture.
+TransactionsTestTask is an iOS application that allows users to manage Bitcoin transactions with real-time Bitcoin rate monitoring and offline support. The app demonstrates modern iOS development practices including reactive programming, dependency injection, and clean architecture.
 
 ## 🏗️ Architecture
 
@@ -20,50 +20,6 @@ TransactionsTestTask is a sophisticated iOS application that allows users to man
 - ✅ **Dependency Injection**: Centralized service management
 - ✅ **Reactive Programming**: Combine framework for data flow
 - ✅ **Protocol-Oriented Design**: Interface-based programming
-- ✅ **Single Responsibility**: Each component has one clear purpose
-
-## 📁 Project Structure
-
-```
-TransactionsTestTask/
-├── App/                          # Application layer
-│   ├── AppCoordinator.swift     # Root coordinator
-│   ├── AppDelegate.swift        # App lifecycle
-│   ├── SceneDelegate.swift      # Scene management
-│   ├── Main/                    # Main scene
-│   │   ├── MainCoordinator.swift
-│   │   ├── MainViewController.swift
-│   │   ├── MainViewModel.swift
-│   │   └── Views/
-│   │       ├── TransactionCell.swift
-│   │       └── TransactionHeaderView.swift
-│   └── AddTransaction/          # Add transaction scene
-│       ├── AddTransactionCoordinator.swift
-│       ├── AddTransactionViewController.swift
-│       ├── AddTransactionViewModel.swift
-│       └── Views/
-│           └── CategoryCell.swift
-├── Models/                       # Data models
-│   └── Transactions/
-│       ├── Transaction.swift
-│       ├── TransactionType.swift
-│       └── TransactionGroup.swift
-├── Services/                     # Business logic layer
-│   ├── ServicesAssembler.swift  # Dependency injection container
-│   ├── AnalyticsService/        # Analytics and logging
-│   ├── BitcoinRateService/      # Bitcoin rate management
-│   ├── TransactionService/      # Transaction management
-│   ├── NetworkLayer/            # Network infrastructure
-│   └── Helpers/
-│       └── PerformOnce.swift    # Singleton wrapper
-├── Storage/                      # Data persistence
-│   └── CoreDataStack.swift      # Core Data management
-├── DesignSystem/                 # UI design system
-│   └── DesignSystem.swift       # Colors, shadows, gradients
-└── Resources/                    # Assets and configuration
-    ├── Assets.xcassets/
-    └── TransactionsTestTask.xcdatamodeld/
-```
 
 ## 🚀 Key Features
 
@@ -97,7 +53,6 @@ TransactionsTestTask/
 
 ### **Core Technologies**
 - **Swift 5.9+** - Modern Swift programming
-- **iOS 15.0+** - Latest iOS features support
 - **Combine** - Reactive programming framework
 - **Core Data** - Data persistence
 - **UIKit** - User interface framework
@@ -105,7 +60,6 @@ TransactionsTestTask/
 ### **Dependencies & Services**
 - **Network Layer** - Custom HTTP client with plugin system
 - **Analytics Service** - Event tracking and logging
-- **Bitcoin API** - CoinDesk integration
 - **Design System** - Centralized UI styling
 
 ### **Design Patterns**
@@ -118,9 +72,7 @@ TransactionsTestTask/
 ## 🔧 Setup & Installation
 
 ### **Prerequisites**
-- Xcode 15.0+
-- iOS 15.0+ deployment target
-- macOS 13.0+ (for development)
+- iOS 17.5+ deployment target
 
 ### **Installation Steps**
 1. Clone the repository
@@ -174,83 +126,6 @@ TransactionsTestTask/
 - **Buttons**: Green gradient
 - **Cards**: Glass effect with transparency
 
-## 🔌 Services Architecture
-
-### **ServicesAssembler**
-Central dependency injection container that manages all service instances:
-
-```swift
-enum ServicesAssembler {
-    // Core services
-    static let analyticsService: PerformOnce<AnalyticsService>
-    static let transactionService: PerformOnce<TransactionService>
-    static let bitcoinRateService: PerformOnce<BitcoinRateService>
-    
-    // Infrastructure
-    static let coreDataStack: PerformOnce<CoreDataStack>
-    static let networkReachability: PerformOnce<NetworkReachability>
-}
-```
-
-### **Service Dependencies**
-```
-TransactionService
-├── TransactionStore (Core Data)
-└── AnalyticsService
-
-BitcoinRateService
-├── BitcoinRateNetworkService
-├── NetworkReachability
-├── BitcoinRateStore (Core Data)
-└── AnalyticsService
-```
-
-## 📊 Data Flow
-
-### **Transaction Flow**
-```
-User Input → ViewController → ViewModel.input → Service → Core Data → ViewModel.output → UI Update
-```
-
-### **Bitcoin Rate Flow**
-```
-Network Request → BitcoinRateService → Core Data Cache → ViewModel.output → UI Update
-```
-
-### **Analytics Flow**
-```
-Event → AnalyticsService → Event Storage → Logging
-```
-
-## 🧪 Testing
-
-### **Test Coverage**
-- **Unit Tests**: Service layer testing
-- **Mock Objects**: Comprehensive mock implementations
-- **Test Scenarios**: Success, failure, and edge cases
-
-### **Test Structure**
-```
-TransactionsTestTaskTests/
-├── Mocks/                       # Mock implementations
-│   ├── MockAnalyticsService.swift
-│   ├── MockTransactionStore.swift
-│   ├── MockBitcoinRateStore.swift
-│   ├── MockNetworkReachability.swift
-│   └── MockBitcoinRateNetworkService.swift
-└── Services/                    # Service tests
-    ├── AnalyticsServiceTests.swift
-    ├── BitcoinRateServiceTests.swift
-    └── TransactionServiceTests.swift
-```
-
-### **Running Tests**
-1. In Xcode: `Cmd + U`
-2. Or via command line:
-   ```bash
-   xcodebuild test -project TransactionsTestTask.xcodeproj -scheme TransactionsTestTask
-   ```
-
 ## 🔄 MVVM Inputs-Outputs Pattern
 
 ### **ViewModel Structure**
@@ -303,12 +178,6 @@ viewModel.output.balance
 ### **Plugins**
 - **LoggingPlugin**: Request/response logging
 - **BitcoinRateAnalyticsPlugin**: Bitcoin rate analytics
-- **AnalyticsPlugin**: General analytics tracking
-
-### **Error Handling**
-- **NetworkError**: Comprehensive error types
-- **Retry Logic**: Automatic retry on failures
-- **Offline Fallback**: Cached data when offline
 
 ## 💾 Data Persistence
 
@@ -321,40 +190,6 @@ viewModel.output.balance
 - **CRUD Operations**: Create, read, update, delete
 - **Batch Operations**: Efficient bulk operations
 - **Background Contexts**: Non-blocking data operations
-- **Migration Support**: Schema evolution
-
-## 📱 User Interface
-
-### **Main Screen**
-- **Balance Display**: Current Bitcoin balance
-- **Bitcoin Rate**: Real-time USD rate
-- **Transaction List**: Paginated transaction history
-- **Add Buttons**: Quick access to add transactions
-
-### **Add Transaction Screen**
-- **Amount Input**: Bitcoin amount entry
-- **Category Selection**: Expense categorization
-- **Type Selection**: Income vs. Expense
-- **Date Picker**: Transaction date selection
-
-### **UI Components**
-- **Custom Cells**: TransactionCell, CategoryCell
-- **Custom Headers**: TransactionHeaderView
-- **Gradient Backgrounds**: Beautiful visual effects
-- **Glass Morphism**: Modern iOS design language
-
-## 🔒 Security & Privacy
-
-### **Data Protection**
-- **Core Data Encryption**: Secure data storage
-- **Network Security**: HTTPS-only API calls
-- **Input Validation**: Client-side validation
-- **Error Handling**: Secure error messages
-
-### **Privacy Features**
-- **Local Storage**: No external data transmission
-- **Analytics**: Anonymous event tracking
-- **User Control**: Full data ownership
 
 ## 🚀 Performance Optimizations
 
@@ -368,70 +203,9 @@ viewModel.output.balance
 - **Caching**: Offline data availability
 - **Lazy Loading**: Load data on demand
 
-### **UI Performance**
-- **Cell Reuse**: Efficient table view performance
-- **Async Operations**: Non-blocking UI updates
-- **Image Optimization**: Efficient asset usage
-
-## 🔧 Configuration & Customization
-
-### **Environment Variables**
-- **API Endpoints**: Configurable Bitcoin API
-- **Update Intervals**: Adjustable refresh rates
-- **Page Sizes**: Configurable pagination
-
-### **Feature Flags**
-- **Analytics**: Enable/disable tracking
-- **Offline Mode**: Force offline operation
-- **Debug Mode**: Enhanced logging
-
 ## 📈 Future Enhancements
-
-### **Planned Features**
-- **Push Notifications**: Price alerts
-- **Widgets**: Home screen integration
-- **iCloud Sync**: Cross-device synchronization
-- **Export Functionality**: Data portability
-- **Advanced Analytics**: Detailed insights
 
 ### **Technical Improvements**
 - **SwiftUI Migration**: Modern UI framework
 - **Async/Await**: Latest concurrency model
 - **Performance Monitoring**: App performance metrics
-- **Accessibility**: Enhanced accessibility support
-
-## 🤝 Contributing
-
-### **Development Guidelines**
-1. **Code Style**: Follow Swift style guide
-2. **Architecture**: Maintain MVVM-C pattern
-3. **Testing**: Ensure test coverage
-4. **Documentation**: Update documentation
-
-### **Pull Request Process**
-1. Fork the repository
-2. Create feature branch
-3. Implement changes
-4. Add tests
-5. Submit pull request
-
-## 📄 License
-
-This project is proprietary and confidential. All rights reserved.
-
-## 👥 Team
-
-- **Val Bratkevich** - Lead iOS Developer
-- **Anton Vodolazkyi** - iOS Developer
-- **Abodnar** - iOS Developer
-
-## 📞 Support
-
-For technical support or questions:
-- **Email**: [contact@company.com]
-- **Issues**: GitHub Issues
-- **Documentation**: Inline code documentation
-
----
-
-**Built with ❤️ using modern iOS development practices**
