@@ -7,6 +7,16 @@
 
 TransactionsTestTask is an iOS application that allows users to manage Bitcoin transactions with real-time Bitcoin rate monitoring and offline support. The app demonstrates modern iOS development practices including reactive programming, dependency injection, and clean architecture.
 
+## 🎨 UI
+<p>
+  <a href="https://github.com/user-attachments/assets/6e38eb60-16f8-48ef-aad2-873cd320ada3">
+    <img src="https://github.com/user-attachments/assets/6e38eb60-16f8-48ef-aad2-873cd320ada3" width="360" alt="UI 1">
+  </a>
+  <a href="https://github.com/user-attachments/assets/74097a01-a704-4e14-a684-6dc5d5519253">
+    <img src="https://github.com/user-attachments/assets/74097a01-a704-4e14-a684-6dc5d5519253" width="360" alt="UI 2">
+  </a>
+</p>
+
 ## 🏗️ Architecture
 
 ### **MVVM-C (Model-View-ViewModel-Coordinator)**
